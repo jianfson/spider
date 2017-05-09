@@ -1,61 +1,72 @@
-# -*- coding: utf-8 -*-
-import os
-import sys
-import urllib2
-import requests
-import re
-from lxml import etree
-
-
-def StringListSave(save_path, filename, slist):
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
-    path = save_path+"/"+filename+".txt"
-    with open(path, "w+") as fp:
-        for s in slist:
-            fp.write("%s\t\t%s\n" % (s[0].encode("utf8"), s[1].encode("utf8")))
-
-def Page_Info(myPage):
-    '''Regex'''
-    mypage_Info = re.findall(r'<div class="titleBar" id=".*?"><h2>(.*?)</h2><div class="more"><a href="(.*?)">.*?</a></div></div>', myPage, re.S)
-    return mypage_Info
-
-def New_Page_Info(new_page):
-    '''Regex(slowly) or Xpath(fast)'''
-    # new_page_Info = re.findall(r'<td class=".*?">.*?<a href="(.*?)\.html".*?>(.*?)</a></td>', new_page, re.S)
-    # # new_page_Info = re.findall(r'<td class=".*?">.*?<a href="(.*?)">(.*?)</a></td>', new_page, re.S) # bugs
-    # results = []
-    # for url, item in new_page_Info:
-    #     results.append((item, url+".html"))
-    # return results
-    dom = etree.HTML(new_page)
-    new_items = dom.xpath('//tr/td/a/text()')
-    new_urls = dom.xpath('//tr/td/a/@href')
-    assert(len(new_items) == len(new_urls))
-    return zip(new_items, new_urls)
-
-def Spider(url):
-    i = 0
-    print "downloading ", url
-    myPage = requests.get(url).content.decode("gbk")
-    # myPage = urllib2.urlopen(url).read().decode("gbk")
-    myPageResults = Page_Info(myPage)
-    save_path = u"spider"
-    filename = str(i)+"_"+u"全省水质自动监测网络实时监测情况"
-    StringListSave(save_path, filename, myPageResults)
-    i += 1
-    for item, url in myPageResults:
-        print "downloading ", url
-        new_page = requests.get(url).content.decode("gbk")
-        # new_page = urllib2.urlopen(url).read().decode("gbk")
-        newPageResults = New_Page_Info(new_page)
-        filename = str(i)+"_"+item
-        StringListSave(save_path, filename, newPageResults)
-        i += 1
-
-
-if __name__ == '__main__':
-    print "start"
-    start_url = "http://www.scemc.cn:8383/websr/browser/webwater.jsp"
-    Spider(start_url)
-    print "end"
+#-*- encoding:utf-8 -*-  
+import sys  
+import locale
+import string  
+import traceback  
+import datetime  
+import urllib2  
+from pyquery import PyQuery as pq  
+# 确定运行环境的encoding 
+def get_info(entry_url):
+    css_select = 'html body div.box div.news_wrapper div.main div.news_list div.service_main div table tr '
+    #使用火狐浏览器中的自动复制css路径得到需要位置数据
+    page = urllib2.urlopen(entry_url).read()
+    #读取页面
+    page = page.replace('<br />','&')
+    page = page.replace('<br/>','&')
+    #由于页面中的电话信息中使用了br换行，所以在抓取的时候会产生问题
+    #问题是：如果取得一对标签中的数据，中包含<br/>,会出现值得到br之前的数据，而后的数据将得不到，原因个人认为是解析html是会任务/>结尾标准        
+    d = pq(page)
+    #使用PyQuery解析页面，此处pq=PyQuery,因为from pyquery import PyQuery as pq
+    dealer_list = []
+    #创建列表用于提交到存储方法
+    for dealer_div in d(css_select):
+        #此处定位tr，具体数据在此标签中的td标签内
+        p = dealer_div.findall('td')
+        #此处p就是一个tr标签内，全部td数据的集合
+        dealer = {}
+        #此处的字典用于存储一个店铺的信息用于提交到列表中
+        if len(p)==1:
+            #此处多哥if判断是用于对数据进行处理，因为一些格式不符合最终数据的要求，需要剔除，这个快的代码按需求而定
+            print '@'
+            print p[0].text.strip()
+#        elif len(p)==17 :
+#            strp = p[0].text.strip()
+#            dealer[Constant.CITY] = p[1].text.strip()
+#            strc = p[2].text.strip()
+#
+#            dealer[Constant.PROVINCE] = p[0].text.strip()
+#            dealer[Constant.CITY] = p[1].text.strip()
+#            dealer[Constant.NAME] = p[2].text.strip()
+#            dealer[Constant.ADDRESSTYPE] = p[3].text.strip()
+#            dealer[Constant.ADDRESS] = p[4].text.strip()
+#            dealer[Constant.TELPHONE] = p[5].text.strip()
+#            dealer_list.append(dealer)  
+#        elif len(p)==16:
+#            if p[0].text.strip() != u'省份':
+#                dealer[Constant.PROVINCE] = strp
+#                dealer[Constant.CITY] = p[0].text.strip()
+#                dealer[Constant.NAME] = p[1].text.strip()
+#                dealer[Constant.ADDRESSTYPE] = p[2].text.strip()
+#                dealer[Constant.ADDRESS] = p[3].text.strip()
+#                dealer[Constant.TELPHONE] = p[4].text.strip()
+#                dealer_list.append(dealer)
+#        elif len(p)==3:
+#            print '@@'
+    print '@@@'
+#    self.saver.add(dealer_list)
+#    self.saver.commit()
+reload(sys);  
+sys.setdefaultencoding('utf8');  
+f = open('gongsi.csv', 'w');
+d = pq("http://www.scemc.cn:8383/websr/browser/webwater.jsp");
+#get_info("http://www.scemc.cn:8383/websr/browser/webwater.jsp");
+#for i in range(1,24):  
+#    d = pq(url="http://www.scemc.cn:8383/websr/browser/webwater.jsp"%(i));  
+#    itemsa=d('dl dt a') #取title元素  
+#    itemsb=d('dl dd') #取title元素  
+#    for j in range(0,len(itemsa)):  
+#        f.write("%s,\"%s\"\n"%(itemsa[j].get('title'),itemsb[j*2].text));  
+#    #end for  
+##end for      
+f.close();  
