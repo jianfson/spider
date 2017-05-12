@@ -1,20 +1,21 @@
-import threading
 import time
 import sys
 import os
+import schedule
 reload(sys);  
 sys.setdefaultencoding('utf8');
 def fun_timer():
     print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
     os.system("scrapy crawl NgaSpider")
-    global timer
-    timer = threading.Timer(10, fun_timer)
-    timer.start()
 
-timer = threading.Timer(0.02, fun_timer)
-timer.start()
+#timer = threading.Timer(0.02, fun_timer)
+#timer.start()
 
-time.sleep(200)
-timer.cancel()
-
+#time.sleep(200)
+#timer.cancel()
+#weather.weather_func('2017-05-11 12:00:00')
+schedule.every().day.at("16:00").do(fun_timer)
+while True:
+    schedule.run_pending()
+    time.sleep(1)
 
