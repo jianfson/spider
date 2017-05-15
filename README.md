@@ -4,6 +4,7 @@ the follows need to be install before running:
    openpyxl
    pyamf
    json
+   schedule
 
 run cmd:
    scrapy crawl NgaSpider
