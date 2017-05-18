@@ -13,7 +13,8 @@ sys.setdefaultencoding('utf8');
 isOpened = threading.Event()
 
 RBuf = ''
-global StartTime
+StartTime = ''
+start_manually = False
 
 root = Tk.Tk()
 ComS = Tk.StringVar(root,'00:00')
@@ -46,7 +47,7 @@ def main():
 	args = int(ComX.get())
         
         StartTime = time.strftime('%Y-%m-%d ',time.localtime(time.time())) + ComS.get() + ':00' 
-	com_thread = threading.Thread(target=COMTrce,args=(StartTime,))
+	com_thread = threading.Thread(target=COMTrce)
 	com_thread.setDaemon(True)
 	com_thread.start()
 
@@ -59,6 +60,7 @@ def main():
 
 def COMOpen(cnv2):
     global RBuf
+    global StartTime
     if not isOpened.isSet():
         root.event_generate("<<DELETE>>")
 	RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' 操作：打开定时器\n'
@@ -75,27 +77,34 @@ def COMOpen(cnv2):
 	Open.set(u'打开定时器')
 	cnv2.itemconfig('led',fill='black')
 
-def COMTrce( par ):
+def COMTrce():
     global RBuf
+    global start_manually
+    global StartTime
     while True:
+    	if start_manually == True:
+	    start_manually = False
+	    os.system("scrapy crawl NgaSpider")
+	    time.sleep(0.05)
 	if isOpened.isSet():
             now = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-            print par
-            if now > par:
+            if now > StartTime:
 	        RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' auto run spider begin...\n'
 	        root.event_generate("<<COMRxRdy>>")
-                #os.system("scrapy crawl NgaSpider")
+                os.system("scrapy crawl NgaSpider")
                 RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' auto run spider end.\n'
 	        root.event_generate("<<COMRxRdy>>")
-                time.sleep(args*10)
+                time.sleep(args*60*60)
 	else:
 	    args = int(ComX.get())
 	    time.sleep(0.05)
 def Start(cnv1):
     global RBuf
+    global start_manually
     RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' run spider manually\n'
     root.event_generate("<<COMRxRdy>>")
-    os.system("scrapy crawl NgaSpider")
+    start_manually = True
+    #os.system("scrapy crawl NgaSpider")
 
 def Clear(cnv1):
     root.event_generate("<<DELETE>>")
