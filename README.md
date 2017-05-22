@@ -5,6 +5,7 @@ the follows need to be install before running:
    pyamf
    json
    schedule
+   pypiwin32
 
 run cmd:
    scrapy crawl NgaSpider
