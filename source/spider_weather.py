@@ -6,6 +6,8 @@ import time
 import threading
 import Tkinter as Tk
 import Tkinter as tk
+import weather
+import datetime
 
 reload(sys);
 sys.setdefaultencoding('utf8');
@@ -24,7 +26,7 @@ Open = Tk.StringVar(root,u'打开定时器')
 
 
 def main():
-	root.title("水质检测数据")
+	root.title("成都天气数据")
 
 	txt1 = Tk.Text(root,width=81,border=5)
 	txt1.pack(side='top',padx=3,pady=1,anchor='c')
@@ -88,14 +90,25 @@ def COMTrce():
     while True:
     	if start_manually == True:
 	    start_manually = False
-	    os.system("scrapy crawl NgaSpider")
+            now = datetime.datetime.now()
+            #schedule.every().hour.do(fun_timer)
+            oneHourAgo = (now - datetime.timedelta(hours = 1) - datetime.timedelta(minutes = now.minute) - datetime.timedelta(seconds = now.second))
+            print oneHourAgo.strftime('%Y-%m-%d %H:%M:%S')
+            RBuf = 'input time : ' + oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') + ' \n'
+            root.event_generate("<<COMRxRdy>>")
+            weather.weather_func( oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') )
+            RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' end time \n'
+            root.event_generate("<<COMRxRdy>>")
 	    time.sleep(0.05)
 	if isOpened.isSet():
-            now = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-            if now > StartTime:
+            now = datetime.datetime.now()
+            if now.strftime('%Y-%m-%d %H:%M:%S') > StartTime:
+                oneHourAgo = (now - datetime.timedelta(hours = 1) - datetime.timedelta(minutes = now.minute) - datetime.timedelta(seconds = now.second))
+                print oneHourAgo.strftime('%Y-%m-%d %H:%M:%S')
 	        RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' auto run spider begin...\n'
+                RBuf = RBuf + 'input time : ' + oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') + ' \n'
 	        root.event_generate("<<COMRxRdy>>")
-                os.system("scrapy crawl NgaSpider")
+                weather.weather_func( oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') )
                 RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' auto run spider end.\n'
 	        root.event_generate("<<COMRxRdy>>")
                 time.sleep(args*60*60)
@@ -105,7 +118,7 @@ def COMTrce():
 def Start(cnv1):
     global RBuf
     global start_manually
-    RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' run spider manually\n'
+    RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' run spider manually begin...\n'
     root.event_generate("<<COMRxRdy>>")
     start_manually = True
     #os.system("scrapy crawl NgaSpider")
