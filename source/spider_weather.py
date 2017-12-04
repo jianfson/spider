@@ -1,4 +1,4 @@
-#coding=utf-8
+﻿#coding=utf-8
 import sys
 import os
 import ttk
@@ -7,6 +7,7 @@ import threading
 import Tkinter as Tk
 import Tkinter as tk
 import weather
+import weather_new
 import datetime
 
 reload(sys);
@@ -96,7 +97,7 @@ def COMTrce():
             print oneHourAgo.strftime('%Y-%m-%d %H:%M:%S')
             RBuf = 'input time : ' + oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') + ' \n'
             root.event_generate("<<COMRxRdy>>")
-            weather.weather_func( oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') )
+            weather_new.weather_new_func( oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') )
             RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' end time \n'
             root.event_generate("<<COMRxRdy>>")
 	    time.sleep(0.05)
@@ -108,7 +109,7 @@ def COMTrce():
 	        RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' auto run spider begin...\n'
                 RBuf = RBuf + 'input time : ' + oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') + ' \n'
 	        root.event_generate("<<COMRxRdy>>")
-                weather.weather_func( oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') )
+                weather_new.weather_new_func( oneHourAgo.strftime('%Y-%m-%d %H:%M:%S') )
                 RBuf = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + ' auto run spider end.\n'
 	        root.event_generate("<<COMRxRdy>>")
                 time.sleep(args*60*60)
