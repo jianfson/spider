@@ -19,6 +19,7 @@ start_manually = False
 root = Tk.Tk()
 ComS = Tk.StringVar(root,'00:00')
 ComX = Tk.StringVar(root,'1')
+ComL = Tk.StringVar(root,'http://118.122.118.75:8383/websr/browser/webwater.jsp')
 Open = Tk.StringVar(root,u'打开定时器')
 
 
@@ -42,6 +43,12 @@ def main():
 	cnv2.create_window(220,15,window=ttk.Combobox(root,textvariable=ComX,values=['1', '2', '3','4'],width=12))
 	cnv2.create_window(337,15,window=ttk.Button(root,textvariable=Open,width=12,command=lambda:COMOpen(cnv2)))
 	cnv2.create_oval(420,7,436,23,fill='black',tag='led')
+	
+	cnv0 = tk.Canvas(root,height=26,width=580)
+	cnv0.pack(side='top',padx=0,pady=0,anchor='c')
+	cnv0.create_window(100,15,window=ttk.Label(root,text=u'抓取地址：'))
+	# Adding a Textbox Entry widget
+	cnv0.create_window(370,15,window=ttk.Entry(root,width=80,textvariable=ComL))
 
 	global args
 	args = int(ComX.get())

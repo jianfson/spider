@@ -16,7 +16,7 @@ class NgaSpider(scrapy.Spider):
     # 这个例子中只指定了一个页面作为爬取的起始url
     # 当然从数据库或者文件或者什么其他地方读取起始url也是可以的
     start_urls = [
-        "http://118.122.118.75:8383/websr/browser/webwater.jsp"
+        "http://221.237.179.75:9090/scszjcsj/szjc_sj/DataPublish/preview.xhtml"
     ]
 
     # 爬虫的入口，可以在此进行一些初始化工作，比如从某个文件或者数据库读入起始url
