@@ -6,6 +6,7 @@ the follows need to be install before running:
    json
    schedule
    pypiwin32
+   beautifulsoup
 
 run cmd:
    scrapy crawl NgaSpider
