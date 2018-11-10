@@ -71,59 +71,226 @@ def weather_new_func( par ):
     excel_data3=json.loads(res3)
 
 
-    #print excel_data
-    excel_name = "weather_new.xlsx"
+    excel_name = "气温.xlsx"
+    p1 = os.path.exists(excel_name)
+    if p1:
+        wb = load_workbook(excel_name)
+    else:
+        wb = Workbook()
+        wb.save(excel_name)
+        wb = load_workbook(excel_name)
     i=0
     while i<len(excel_data):
         sheet_name = excel_data[i]['city']
-        print sheet_name
+        exist_sheet = 0
+        for sheet in wb:
+            if sheet.title == sheet_name:
+                exist_sheet = 1
+                break
+        if exist_sheet == 1:
+            ws = wb[sheet_name]
+        else:
+            ws = wb.create_sheet()
+            ws.title = sheet_name
+            line_name = []
+            line_name.append('观测时间')
+            line_name.append('气温(℃)')
+            ws.append(line_name)
         line = []
         line.append(excel_data[i]['observe_time'])
         line.append(excel_data[i]['dryBulTemp'])
-        line.append(excel_data2_1[i]['presum'])
-        line.append(excel_data2_3[i]['presum'])
-        line.append(excel_data2_6[i]['presum'])
-        line.append(excel_data2_12[i]['presum'])
-        line.append(excel_data2_24[i]['presum'])
-        line.append(excel_data3[i]['relHumidity'])
-        p1 = os.path.exists(excel_name)
-        if p1:
-            wb = load_workbook(excel_name)
-            exist_sheet = 0
-            for sheet in wb:
-                if sheet.title == sheet_name:
-                    exist_sheet = 1
-                    break
-            if exist_sheet == 1:
-                ws = wb[sheet_name]
-            else:
-                ws = wb.create_sheet()
-                ws.title = sheet_name
-                line_name = []
-                line_name.append('观测时间')
-                line_name.append('气温(℃)')
-                line_name.append('1小时降水(mm)')
-                line_name.append('3小时降水(mm)')
-                line_name.append('6小时降水(mm)')
-                line_name.append('12小时降水(mm)')
-                line_name.append('24小时降水(mm)')
-                line_name.append('相对湿度(%)')
-                ws.append(line_name)
+        ws.append(line)
+        i=i+1
+    wb.save(excel_name)
+
+    excel_name = "1小时降水.xlsx"
+    p1 = os.path.exists(excel_name)
+    if p1:
+        wb = load_workbook(excel_name)
+    else:
+        wb = Workbook()
+        wb.save(excel_name)
+        wb = load_workbook(excel_name)
+    i=0
+    while i<len(excel_data2_1):
+        sheet_name = excel_data2_1[i]['city']
+        exist_sheet = 0
+        for sheet in wb:
+            if sheet.title == sheet_name:
+                exist_sheet = 1
+                break
+        if exist_sheet == 1:
+            ws = wb[sheet_name]
         else:
-            wb = Workbook()
-            ws = wb.active
+            ws = wb.create_sheet()
             ws.title = sheet_name
             line_name = []
-	    line_name.append('观测时间')
-	    line_name.append('气温(℃)')
-	    line_name.append('1小时降水(mm)')
-	    line_name.append('3小时降水(mm)')
-            line_name.append('6小时降水(mm)')
-	    line_name.append('12小时降水(mm)')
-	    line_name.append('24小时降水(mm)')
-	    line_name.append('相对湿度(%)')
+            line_name.append('观测时间')
+            line_name.append('1小时降水(mm)')
             ws.append(line_name)
+        line = []
+        line.append(excel_data2_1[i]['observe_time'])
+        line.append(excel_data2_1[i]['presum'])
         ws.append(line)
-        wb.save(excel_name)
-            #print i, excel_data[i]['stationname'], '\n'
         i=i+1
+    wb.save(excel_name)
+
+    excel_name = "3小时降水.xlsx"
+    p1 = os.path.exists(excel_name)
+    if p1:
+        wb = load_workbook(excel_name)
+    else:
+        wb = Workbook()
+        wb.save(excel_name)
+        wb = load_workbook(excel_name)
+    i=0
+    while i<len(excel_data2_3):
+        sheet_name = excel_data2_3[i]['city']
+        exist_sheet = 0
+        for sheet in wb:
+            if sheet.title == sheet_name:
+                exist_sheet = 1
+                break
+        if exist_sheet == 1:
+            ws = wb[sheet_name]
+        else:
+            ws = wb.create_sheet()
+            ws.title = sheet_name
+            line_name = []
+            line_name.append('观测时间')
+            line_name.append('3小时降水(mm)')
+            ws.append(line_name)
+        line = []
+        line.append(excel_data2_3[i]['observe_time'])
+        line.append(excel_data2_3[i]['presum'])
+        ws.append(line)
+        i=i+1
+    wb.save(excel_name)
+
+    excel_name = "6小时降水.xlsx"
+    p1 = os.path.exists(excel_name)
+    if p1:
+        wb = load_workbook(excel_name)
+    else:
+        wb = Workbook()
+        wb.save(excel_name)
+        wb = load_workbook(excel_name)
+    i=0
+    while i<len(excel_data2_6):
+        sheet_name = excel_data2_6[i]['city']
+        exist_sheet = 0
+        for sheet in wb:
+            if sheet.title == sheet_name:
+                exist_sheet = 1
+                break
+        if exist_sheet == 1:
+            ws = wb[sheet_name]
+        else:
+            ws = wb.create_sheet()
+            ws.title = sheet_name
+            line_name = []
+            line_name.append('观测时间')
+            line_name.append('6小时降水(mm)')
+            ws.append(line_name)
+        line = []
+        line.append(excel_data2_6[i]['observe_time'])
+        line.append(excel_data2_6[i]['presum'])
+        ws.append(line)
+        i=i+1
+    wb.save(excel_name)
+
+    excel_name = "12小时降水.xlsx"
+    p1 = os.path.exists(excel_name)
+    if p1:
+        wb = load_workbook(excel_name)
+    else:
+        wb = Workbook()
+        wb.save(excel_name)
+        wb = load_workbook(excel_name)
+    i=0
+    while i<len(excel_data2_12):
+        sheet_name = excel_data2_12[i]['city']
+        exist_sheet = 0
+        for sheet in wb:
+            if sheet.title == sheet_name:
+                exist_sheet = 1
+                break
+        if exist_sheet == 1:
+            ws = wb[sheet_name]
+        else:
+            ws = wb.create_sheet()
+            ws.title = sheet_name
+            line_name = []
+            line_name.append('观测时间')
+            line_name.append('12小时降水(mm)')
+            ws.append(line_name)
+        line = []
+        line.append(excel_data2_12[i]['observe_time'])
+        line.append(excel_data2_12[i]['presum'])
+        ws.append(line)
+        i=i+1
+    wb.save(excel_name)
+
+    excel_name = "24小时降水.xlsx"
+    p1 = os.path.exists(excel_name)
+    if p1:
+        wb = load_workbook(excel_name)
+    else:
+        wb = Workbook()
+        wb.save(excel_name)
+        wb = load_workbook(excel_name)
+    i=0
+    while i<len(excel_data2_24):
+        sheet_name = excel_data2_24[i]['city']
+        exist_sheet = 0
+        for sheet in wb:
+            if sheet.title == sheet_name:
+                exist_sheet = 1
+                break
+        if exist_sheet == 1:
+            ws = wb[sheet_name]
+        else:
+            ws = wb.create_sheet()
+            ws.title = sheet_name
+            line_name = []
+            line_name.append('观测时间')
+            line_name.append('24小时降水(mm)')
+            ws.append(line_name)
+        line = []
+        line.append(excel_data2_24[i]['observe_time'])
+        line.append(excel_data2_24[i]['presum'])
+        ws.append(line)
+        i=i+1
+    wb.save(excel_name)
+
+    excel_name = "湿度.xlsx"
+    p1 = os.path.exists(excel_name)
+    if p1:
+        wb = load_workbook(excel_name)
+    else:
+        wb = Workbook()
+        wb.save(excel_name)
+        wb = load_workbook(excel_name)
+    i=0
+    while i<len(excel_data3):
+        sheet_name = excel_data3[i]['city']
+        exist_sheet = 0
+        for sheet in wb:
+            if sheet.title == sheet_name:
+                exist_sheet = 1
+                break
+        if exist_sheet == 1:
+            ws = wb[sheet_name]
+        else:
+            ws = wb.create_sheet()
+            ws.title = sheet_name
+            line_name = []
+            line_name.append('观测时间')
+            line_name.append('相对湿度(%)')
+            ws.append(line_name)
+        line = []
+        line.append(excel_data3[i]['observe_time'])
+        line.append(excel_data3[i]['relHumidity'])
+        ws.append(line)
+        i=i+1
+    wb.save(excel_name)
